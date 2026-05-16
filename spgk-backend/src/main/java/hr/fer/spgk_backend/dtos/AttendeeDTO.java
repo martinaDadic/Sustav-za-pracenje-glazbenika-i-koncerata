@@ -4,15 +4,13 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ConcertSummaryDTO {
+public class AttendeeDTO {
     private Long id;
-    private String name;
-    private LocalDateTime dateTime;
-    private String country;
-    private String artistName;
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String city;
 }

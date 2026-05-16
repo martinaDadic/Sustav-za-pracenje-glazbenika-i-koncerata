@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "koncert")
@@ -39,4 +40,11 @@ public class Concert {
     @JoinColumn(name = "idizvodaca", nullable = false)
     private Artist artist;
 
+    @ManyToMany
+    @JoinTable(
+            name = "dolazi",
+            joinColumns = @JoinColumn(name = "idkoncerta"),
+            inverseJoinColumns = @JoinColumn(name = "idljubiteljaglazb")
+    )
+    private List<MusicLover> attendees;
 }
