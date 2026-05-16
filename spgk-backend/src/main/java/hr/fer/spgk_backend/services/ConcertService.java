@@ -59,4 +59,8 @@ public class ConcertService {
                 attendees
         );
     }
+
+    public void deleteById(Long id) {
+        concertRepository.deleteById(id);
+    }
 }

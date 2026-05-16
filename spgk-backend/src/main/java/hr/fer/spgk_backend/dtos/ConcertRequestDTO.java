@@ -7,7 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ArtistDTO {
+public class ConcertRequestDTO {
     private Long id;
-    private String name;
+
+
 }
