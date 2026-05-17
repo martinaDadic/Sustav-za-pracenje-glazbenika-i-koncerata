@@ -5,6 +5,9 @@
         <slot name="naslov"></slot>
       </h3>
       <p>
+        <slot name="artist"></slot>
+      </p>
+      <p>
         <slot name="datum"></slot>
       </p>
       <slot></slot>

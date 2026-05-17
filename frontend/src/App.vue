@@ -7,7 +7,7 @@ import { RouterLink, RouterView } from 'vue-router'
     <header>
 
       <div class="wrapper">
-        <h1>Koncerti</h1>
+        <h1>SPGK</h1>
 
         <nav>
           <RouterLink to="/">Home</RouterLink>
