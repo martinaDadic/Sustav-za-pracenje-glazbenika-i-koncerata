@@ -92,6 +92,7 @@ export default {
             organizerLastName: this.organizatorPrezime,
           }),
         });
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
         this.success = 'Koncert uspješno kreiran!';
         this.clearForm();
         this.$router.push('/');

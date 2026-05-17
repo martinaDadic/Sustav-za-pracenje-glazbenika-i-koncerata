@@ -142,7 +142,7 @@ export default {
             organizerLastName: this.organizatorPrezime,
           }),
         });
-
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
         this.koncert.naziv = this.naziv;
         this.koncert.izvodac = this.izvodac;
         this.koncert.organizatorIme = this.organizatorIme;
