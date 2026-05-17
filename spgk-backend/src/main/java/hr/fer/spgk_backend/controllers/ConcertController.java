@@ -19,10 +19,10 @@ public class ConcertController {
         this.concertService = concertService;
     }
 
-    /*@PostMapping
+    @PostMapping
     public ResponseEntity<ConcertDetailDTO> create(@RequestBody ConcertRequestDTO dto) {
         return ResponseEntity.status(HttpStatus.CREATED).body(concertService.create(dto));
-    }*/
+    }
 
     @GetMapping
     public List<ConcertSummaryDTO> getAll() {
@@ -34,10 +34,10 @@ public class ConcertController {
         return concertService.getById(id);
     }
 
-   /* @PutMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ConcertDetailDTO> update(@PathVariable Long id, @RequestBody ConcertRequestDTO dto) {
         return ResponseEntity.ok(concertService.update(id, dto));
-    }*/
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
