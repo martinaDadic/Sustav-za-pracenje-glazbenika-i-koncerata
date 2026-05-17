@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface ConcertRepository extends JpaRepository<Concert, Long> {
@@ -23,4 +24,11 @@ public interface ConcertRepository extends JpaRepository<Concert, Long> {
             @Param("dateTime") LocalDateTime dateTime,
             @Param("excludeId") Long excludeId
     );
+
+    @Query("SELECT c FROM Concert c WHERE " +
+            "LOWER(c.name) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
+            "LOWER(c.artist.name) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
+            "LOWER(c.location.city) LIKE LOWER(CONCAT('%', :term, '%')) OR " +
+            "LOWER(c.location.country) LIKE LOWER(CONCAT('%', :term, '%'))")
+    List<Concert> search(@Param("term") String term);
 }

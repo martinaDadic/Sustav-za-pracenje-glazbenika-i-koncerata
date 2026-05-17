@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -47,4 +48,12 @@ public class Concert {
             inverseJoinColumns = @JoinColumn(name = "idljubiteljaglazb")
     )
     private List<MusicLover> attendees;
+
+    public List<MusicLover> getAttendees() {
+        if (attendees == null) {
+            return Collections.emptyList();
+        }
+
+        return attendees;
+    }
 }

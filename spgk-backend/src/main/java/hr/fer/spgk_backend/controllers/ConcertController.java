@@ -45,5 +45,8 @@ public class ConcertController {
         return ResponseEntity.noContent().build();
     }
 
-
+    @GetMapping("/search")
+    public ResponseEntity<List<ConcertSummaryDTO>> searchConcerts(@RequestParam String term) {
+        return ResponseEntity.ok(concertService.searchConcerts(term));
+    }
 }

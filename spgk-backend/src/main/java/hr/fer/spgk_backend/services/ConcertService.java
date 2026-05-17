@@ -4,10 +4,7 @@ import hr.fer.spgk_backend.dtos.AttendeeDTO;
 import hr.fer.spgk_backend.dtos.ConcertDetailDTO;
 import hr.fer.spgk_backend.dtos.ConcertRequestDTO;
 import hr.fer.spgk_backend.dtos.ConcertSummaryDTO;
-import hr.fer.spgk_backend.models.Artist;
-import hr.fer.spgk_backend.models.Concert;
-import hr.fer.spgk_backend.models.ConcertOrganizer;
-import hr.fer.spgk_backend.models.Location;
+import hr.fer.spgk_backend.models.*;
 import hr.fer.spgk_backend.repositories.ArtistRepository;
 import hr.fer.spgk_backend.repositories.ConcertOrganizerRepository;
 import hr.fer.spgk_backend.repositories.ConcertRepository;
@@ -16,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -150,5 +148,17 @@ public class ConcertService {
         concertRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Concert not found"));
         concertRepository.deleteById(id);
+    }
+
+    public List<ConcertSummaryDTO> searchConcerts(String term) {
+        return concertRepository.search(term).stream()
+                .map(concert -> new ConcertSummaryDTO(
+                        concert.getId(),
+                        concert.getName(),
+                        concert.getDateTime(),
+                        concert.getLocation().getCountry(),
+                        concert.getArtist().getName()
+                ))
+                .collect(Collectors.toList());
     }
 }
