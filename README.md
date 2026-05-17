@@ -38,7 +38,7 @@ db_setup.sql
 
 3. Pokrenuti skriptu za punjenje baze podataka `spgk` testnim podacima:
 ```
-initialization.sql
+initialization_test.sql
 ```
 
 ---
