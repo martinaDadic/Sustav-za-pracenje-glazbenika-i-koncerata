@@ -39,6 +39,10 @@
 </template>
 
 <script>
+import { concertApi } from '../api/concertApi.js'
+import { artistApi } from '../api/artistApi.js'
+import { organizerApi } from '../api/organizerApi.js'
+
 export default {
   data() {
     return {
@@ -127,13 +131,7 @@ export default {
     },
     async ucitajOrganizatore() {
       try {
-        const response = await fetch('/api/organizers');
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
-        const data = await response.json();
-        this.organizers = data.map(org => ({
-          id: org.id,
-          ime: `${org.firstName} ${org.lastName}`,
-        }));
+        this.organizers = await organizerApi.getAll();
       } catch (e) {
         console.error('error:', e);
         this.error = 'greška pri dohvatu organizatora';
@@ -141,13 +139,7 @@ export default {
     },
     async ucitajIzvodace() {
       try {
-        const response = await fetch('/api/artists');
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
-        const data = await response.json();
-        this.artists = data.map(artist => ({
-          id: artist.id,
-          ime: artist.name,
-        }));
+        this.artists = await artistApi.getAll();
       } catch (e) {
         console.error('error:', e);
         this.error = 'greška pri dohvatu izvodaca.';
