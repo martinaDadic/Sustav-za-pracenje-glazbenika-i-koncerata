@@ -16,6 +16,7 @@
       <input type="text" v-model="drzava" placeholder="drzava" /><br>
       <input type="text" v-model="grad" placeholder="grad" /><br>
       <input type="text" v-model="adresa" placeholder="adresa" /><br>
+      <input type="text" v-model="postanskiBroj" placeholder="postanski broj" /><br>
       
       <p v-if="datumGreska" class="error">{{ datumGreska }}</p>
 
@@ -42,6 +43,7 @@ export default {
       drzava: '',
       grad: '',
       adresa: '',
+      postanskiBroj: '',
       error: '',
       success: '',
       datumGreska: '',
@@ -85,6 +87,7 @@ export default {
             country: this.drzava,
             city: this.grad,
             address: this.adresa,
+            postalCode: this.postanskiBroj,
             organizerFirstName: this.organizatorIme,
             organizerLastName: this.organizatorPrezime,
           }),
