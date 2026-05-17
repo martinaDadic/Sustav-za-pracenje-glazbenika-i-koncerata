@@ -25,13 +25,13 @@ public class ConcertController {
     }
 
     @GetMapping
-    public List<ConcertSummaryDTO> getAll() {
-        return concertService.getAll();
+    public ResponseEntity<List<ConcertSummaryDTO>> getAll() {
+        return ResponseEntity.ok(concertService.getAll());
     }
 
     @GetMapping("/{id}")
-    public ConcertDetailDTO getById(@PathVariable Long id) {
-        return concertService.getById(id);
+    public ResponseEntity<ConcertDetailDTO> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(concertService.getById(id));
     }
 
     @PutMapping("/{id}")
