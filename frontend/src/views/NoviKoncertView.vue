@@ -5,8 +5,8 @@
     <form @submit.prevent="kreirajKoncert">
       <input type="text" v-model="naziv" placeholder="naslov" /><br>
       <input type="text" v-model="izvodac" placeholder="izvodac" /><br>
-      <label>Vrijeme početka: </label>
-      <input type="text" v-model="organizatorIme" placeholder="ime" /><br>
+      <label>Organizator: </label>
+      <input type="text" v-model="organizatorIme" placeholder="ime" />
       <input type="text" v-model="organizatorPrezime" placeholder="prezime" /><br>
       <textarea v-model="opis" placeholder="kratki opis" rows="5"></textarea><br>
       <label>Datum: </label>
@@ -33,13 +33,15 @@ export default {
     return {
       naziv: '',
       izvodac: '',
-      organizator: '',
+      organizatorIme: '',
+      organizatorPrezime: '',
       opis: '',
       brojLjudi: 0,
       datum: '',
       vrijeme: '',
       drzava: '',
       grad: '',
+      adresa: '',
       error: '',
       success: '',
       datumGreska: '',
