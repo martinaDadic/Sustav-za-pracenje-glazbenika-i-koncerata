@@ -58,7 +58,7 @@ export const concertApi = {
         }
     },
 
-    create(dto) {
+    async create(dto) {
         return fetch(`${BASE_URL}/concerts`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

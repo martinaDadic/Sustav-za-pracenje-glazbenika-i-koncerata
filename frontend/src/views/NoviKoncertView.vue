@@ -89,12 +89,7 @@ export default {
         return;
       }
       try {
-        const response = await fetch('/api/concerts', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        await concertApi.create({
             name: this.naziv,
             dateTime: `${this.datum}T${this.vrijeme}:00`,
             description: this.opis,
@@ -104,9 +99,7 @@ export default {
             address: this.adresa,
             postalCode: this.postanskiBroj,
             organizerId: this.organizatorId,
-          }),
         });
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
         this.success = 'Koncert uspješno kreiran!';
         this.clearForm();
         this.$router.push('/');
