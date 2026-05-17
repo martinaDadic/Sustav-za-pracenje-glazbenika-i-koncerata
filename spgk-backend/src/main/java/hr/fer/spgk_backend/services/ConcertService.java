@@ -12,7 +12,9 @@ import hr.fer.spgk_backend.repositories.ArtistRepository;
 import hr.fer.spgk_backend.repositories.ConcertOrganizerRepository;
 import hr.fer.spgk_backend.repositories.ConcertRepository;
 import hr.fer.spgk_backend.repositories.LocationRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -32,11 +34,13 @@ public class ConcertService {
     }
 
     public ConcertDetailDTO create(ConcertRequestDTO dto) {
+        validateConcertLocationAndTime(dto, null);
+
         Artist artist = artistRepository.findById(dto.getArtistId())
-                .orElseThrow(() -> new RuntimeException("Artist not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found"));
 
         ConcertOrganizer organizer = concertOrganizerRepository.findById(dto.getOrganizerId())
-                .orElseThrow(() -> new RuntimeException("Organizer not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Organizer not found"));
 
         Location location = new Location();
         getLocationFromDTO(location, dto);
@@ -64,7 +68,7 @@ public class ConcertService {
 
     public ConcertDetailDTO getById(Long id) {
         Concert concert = concertRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Concert not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Concert not found"));
 
         List<AttendeeDTO> attendees = concert.getAttendees().stream()
                 .map(attendee -> new AttendeeDTO(
@@ -94,13 +98,15 @@ public class ConcertService {
 
     public ConcertDetailDTO update(Long id, ConcertRequestDTO dto) {
         Concert concert = concertRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Concert not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Concert not found"));
+
+        validateConcertLocationAndTime(dto, id);
 
         Artist artist = artistRepository.findById(dto.getArtistId())
-                .orElseThrow(() -> new RuntimeException("Artist not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Artist not found"));
 
         ConcertOrganizer organizer = concertOrganizerRepository.findById(dto.getOrganizerId())
-                .orElseThrow(() -> new RuntimeException("Organizer not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Organizer not found"));
 
         Location location = concert.getLocation();
         getLocationFromDTO(location, dto);
@@ -129,7 +135,20 @@ public class ConcertService {
         location.setAddress(dto.getAddress());
     }
 
+    private void validateConcertLocationAndTime(ConcertRequestDTO dto, Long excludeId) {
+        if (concertRepository.existsByLocationAndDateTime(
+                dto.getCity(),
+                dto.getPostalCode(),
+                dto.getAddress(),
+                dto.getDateTime(),
+                excludeId)) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "A concert already exists at this location and time");
+        }
+    }
+
     public void deleteById(Long id) {
+        concertRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Concert not found"));
         concertRepository.deleteById(id);
     }
 }
