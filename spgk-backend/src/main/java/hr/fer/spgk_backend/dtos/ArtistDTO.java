@@ -1,5 +1,6 @@
 package hr.fer.spgk_backend.dtos;
 
+import hr.fer.spgk_backend.models.Artist;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,4 +11,8 @@ import lombok.NoArgsConstructor;
 public class ArtistDTO {
     private Long id;
     private String name;
+
+    public static ArtistDTO fromArtist(Artist artist) {
+        return new ArtistDTO(artist.getId(), artist.getName());
+    }
 }

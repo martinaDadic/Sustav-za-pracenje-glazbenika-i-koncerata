@@ -1,9 +1,6 @@
 package hr.fer.spgk_backend.services;
 
-import hr.fer.spgk_backend.dtos.AttendeeDTO;
-import hr.fer.spgk_backend.dtos.ConcertDetailDTO;
-import hr.fer.spgk_backend.dtos.ConcertRequestDTO;
-import hr.fer.spgk_backend.dtos.ConcertSummaryDTO;
+import hr.fer.spgk_backend.dtos.*;
 import hr.fer.spgk_backend.models.*;
 import hr.fer.spgk_backend.repositories.ArtistRepository;
 import hr.fer.spgk_backend.repositories.ConcertOrganizerRepository;
@@ -78,19 +75,21 @@ public class ConcertService {
                 ))
                 .collect(Collectors.toList());
 
+        ArtistDTO artistDTO = ArtistDTO.fromArtist(concert.getArtist());
+        ConcertOrganizerDTO organizerDTO = ConcertOrganizerDTO.fromOrganizer(concert.getOrganizer());
+
         return new ConcertDetailDTO(
                 concert.getId(),
                 concert.getName(),
                 concert.getDateTime(),
                 concert.getDescription(),
-                concert.getArtist().getName(),
+                artistDTO,
                 concert.getLocation().getCountry(),
                 concert.getLocation().getCity(),
                 concert.getLocation().getAddress(),
-                concert.getOrganizer().getFirstName(),
-                concert.getOrganizer().getLastName(),
-                concert.getOrganizer().getEmail(),
-                attendees
+                organizerDTO,
+                attendees,
+                concert.getLocation().getPostalCode()
         );
     }
 

@@ -15,12 +15,11 @@ public class ConcertDetailDTO {
     private String name;
     private LocalDateTime dateTime;
     private String description;
-    private String artistName;
+    private ArtistDTO artist;
     private String country;
     private String city;
     private String address;
-    private String organizerFirstName;
-    private String organizerLastName;
-    private String organizerEmail;  // no passwordHash!
+    private ConcertOrganizerDTO organizer;
     private List<AttendeeDTO> attendees;
+    private String postalCode;
 }
