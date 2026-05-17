@@ -4,10 +4,20 @@
 
     <form @submit.prevent="kreirajKoncert">
       <input type="text" v-model="naziv" placeholder="naslov" /><br>
-      <input type="text" v-model="izvodac" placeholder="izvodac" /><br>
+      <label>Izvodac: </label>
+      <select v-model="izvodacId">
+        <option disabled value="">Izvodac: </option>
+        <option v-for="izvodac in artists" :key="izvodac.id" :value="izvodac.id">
+          {{ izvodac.ime }}
+        </option>
+      </select><br>
       <label>Organizator: </label>
-      <input type="text" v-model="organizatorIme" placeholder="ime" />
-      <input type="text" v-model="organizatorPrezime" placeholder="prezime" /><br>
+      <select v-model="organizatorId">
+        <option disabled value="">Organizator: </option>
+        <option v-for="organizator in organizers" :key="organizator.id" :value="organizator.id">
+          {{ organizator.ime }}
+        </option>
+      </select><br>
       <textarea v-model="opis" placeholder="kratki opis" rows="5"></textarea><br>
       <label>Datum: </label>
       <input type="date" v-model="datum" /><br>
@@ -33,9 +43,8 @@ export default {
   data() {
     return {
       naziv: '',
-      izvodac: '',
-      organizatorIme: '',
-      organizatorPrezime: '',
+      izvodacId: '',
+      organizatorId: '',
       opis: '',
       brojLjudi: 0,
       datum: '',
@@ -47,6 +56,8 @@ export default {
       error: '',
       success: '',
       datumGreska: '',
+      organizers: [],
+      artists: [],
     };
   },
   computed: {
@@ -83,13 +94,12 @@ export default {
             name: this.naziv,
             dateTime: `${this.datum}T${this.vrijeme}:00`,
             description: this.opis,
-            artistName: this.izvodac,
+            artistId: this.izvodacId,
             country: this.drzava,
             city: this.grad,
             address: this.adresa,
             postalCode: this.postanskiBroj,
-            organizerFirstName: this.organizatorIme,
-            organizerLastName: this.organizatorPrezime,
+            organizerId: this.organizatorId,
           }),
         });
         if (!response.ok) throw new Error(`API error: ${response.status}`);
@@ -104,7 +114,7 @@ export default {
     clearForm() {
       this.naziv = '';
       this.izvodac = '';
-      this.organizator = '';
+      this.organizatorId = '';
       this.opis = '';
       this.brojLjudi = '';
       this.datum = '';
@@ -115,6 +125,38 @@ export default {
       this.success = '';
       this.datumGreska = '';
     },
+    async ucitajOrganizatore() {
+      try {
+        const response = await fetch('/api/organizers');
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        const data = await response.json();
+        this.organizers = data.map(org => ({
+          id: org.id,
+          ime: `${org.firstName} ${org.lastName}`,
+        }));
+      } catch (e) {
+        console.error('error:', e);
+        this.error = 'greška pri dohvatu organizatora';
+      }
+    },
+    async ucitajIzvodace() {
+      try {
+        const response = await fetch('/api/artists');
+        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        const data = await response.json();
+        this.artists = data.map(artist => ({
+          id: artist.id,
+          ime: artist.name,
+        }));
+      } catch (e) {
+        console.error('error:', e);
+        this.error = 'greška pri dohvatu izvodaca.';
+      }
+    },
+  },
+  async created() {
+    await this.ucitajOrganizatore();
+    await this.ucitajIzvodace();
   },
 };
 </script>

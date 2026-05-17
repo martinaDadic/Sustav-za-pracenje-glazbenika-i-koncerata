@@ -53,6 +53,7 @@ export default {
       filterDatumPocetka: '',
       error: null,
       trazilicaPojam: '',
+      koncerti: [],
     };
   },
   methods: {
