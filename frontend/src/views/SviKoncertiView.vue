@@ -92,10 +92,7 @@ export default {
     },
     async izbrisiKoncert(id) {
       try {
-        const response = await fetch(`/api/concerts/${id}`, {
-          method: 'DELETE',
-        });
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
+        await concertApi.delete(id);
         await this.ucitajKoncerte();
       } catch (e) {
         console.error('error:', e);
