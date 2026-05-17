@@ -21,11 +21,6 @@
   border-radius: 10px;
   margin-bottom:1rem;
   padding-bottom: 1rem;
-  width: 100%;
-}
-
-.details {
-  margin-left: 1rem;
 }
 
 h3 {

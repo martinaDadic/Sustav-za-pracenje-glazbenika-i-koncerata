@@ -107,7 +107,15 @@ export default {
 </script>
 
 <style scoped>
+li{
+  list-style-type: none;
+  width: 95%
+}
 li.zavrsen {
   opacity: 0.5;
 }
+a{
+    color:black;
+    text-decoration:none;
+  }
 </style>
