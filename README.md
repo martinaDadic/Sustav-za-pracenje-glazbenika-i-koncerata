@@ -88,13 +88,18 @@ cd frontend
 npm install
 ```
 
-### Pokretanje frontend (Running the frontend)
+### Pokretanje frontenda (Running the frontend)
 
 ```bash
 npm run dev
 ```
 
 Frontend će se pokrenuti na adresi `http://localhost:5173`.
+
+### Pokretanje testova (Running tests)
+```bash
+npm test
+```
 
 > ⚠️ Backend aplikacija se mora pokrenuti prije frontend aplikacije.
 
