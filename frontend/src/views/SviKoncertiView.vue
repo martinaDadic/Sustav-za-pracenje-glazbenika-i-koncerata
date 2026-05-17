@@ -3,7 +3,7 @@
     <h2>Projekti</h2>
     <div class="pretrazivac">
       <input type="text" v-model="trazilicaPojam" placeholder="pretraži..." />
-      <button @click="pretrazivanje">Pretraži</button>
+      <button @click="pretrazi">Pretraži</button>
     </div>
     <div class="filteri">
       <label for="datumPoc">Datum od:</label>
@@ -40,6 +40,7 @@
 <script>
 import { RouterLink } from 'vue-router'
 import KoncertItem from '../components/KoncertItem.vue'
+import { concertApi } from '../api/concertApi.js'
 
 export default {
   components: {
@@ -68,14 +69,8 @@ export default {
         }
       }
     },
-    pretrazivanje() {
-      this.filtriraniKoncerti = [];
-      const pojam = this.trazilicaPojam.toLowerCase();
-      for (const koncert of this.koncerti) {
-        if (koncert.naslov.toLowerCase().includes(pojam) || koncert.artist.toLowerCase().includes(pojam)) {
-          this.filtriraniKoncerti.push(koncert);
-        }
-      }
+    async pretrazi() {
+      this.filtriraniKoncerti = await concertApi.search(this.trazilicaPojam);
     },
     jeZavrsen(datum) {
       const koncertDatum = new Date(datum);
@@ -86,19 +81,7 @@ export default {
     },
     async ucitajKoncerte() {
       try {
-        const response = await fetch('/api/concerts');
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
-        const data = await response.json();
-        this.koncerti = data.map(koncert => {
-          const date = new Date(koncert.dateTime);
-          return {
-            id: koncert.id,
-            naslov: koncert.name,
-            artist: koncert.artistName,
-            datum: date.toISOString().slice(0, 10),
-            drzava: koncert.country,
-          };
-        });
+        this.koncerti = await concertApi.getAll()
       } catch (e) {
         console.error('error:', e);
         this.error = 'greška pri dohvatu podataka';
