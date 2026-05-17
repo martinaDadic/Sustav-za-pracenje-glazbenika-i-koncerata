@@ -36,9 +36,26 @@ export const concertApi = {
         })
     },
 
-    getById(id) {
-        return fetch(`${BASE_URL}/concerts/${id}`)
+    async getById(id) {
+        const data = await fetch(`${BASE_URL}/concerts/${id}`)
             .then(res => res.json())
+        
+        return {
+            id: data.id,
+            naziv: data.name,
+            izvodac: data.artistName,
+            artistId: data.artistId,
+            organizerId: data.organizerId,
+            opis: data.description,
+            grad: data.city,
+            drzava: data.country,
+            adresa: data.address,
+            postalCode: data.postalCode,
+            datum: data.dateTime,
+            organizatorIme: data.organizerFirstName,
+            organizatorPrezime: data.organizerLastName,
+            attendees: data.attendees,
+        }
     },
 
     create(dto) {

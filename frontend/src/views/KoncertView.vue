@@ -49,9 +49,12 @@
 </template>
 
 <script>
+import { concertApi } from '../api/concertApi.js'
+
 export default {
   data() {
     return {
+      koncert: null,
       error: null,
       success: '',
       koncertDatum: '',
@@ -87,8 +90,8 @@ export default {
   methods: {
     async ucitajKoncert() {
       try {
-        const response = await fetch(`/api/concerts/${this.$route.params.id}`);
-        this.koncert = await response.json();
+        const data = await concertApi.getById(this.$route.params.id);
+        this.koncert = data;
         this.formatirajDatum(this.koncert.datum);
       } catch (e) {
         console.error('error:', e);
