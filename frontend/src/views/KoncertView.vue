@@ -21,10 +21,20 @@
         <label>Naslov: </label>
         <input type="text" v-model="naziv" placeholder="naslov" /><br>
         <label>Izvodac: </label>
-        <input type="text" v-model="izvodac" placeholder="izvodac" /><br>
+        <select v-model="izvodacId">
+            <option disabled value="">Izvodac: </option>
+            <option v-for="izvodac in artists" :key="izvodac.id" :value="izvodac.id">
+                {{ izvodac.ime }}
+            </option>
+        </select><br>
+
         <label>Organizator: </label>
-        <input type="text" v-model="organizatorIme" placeholder="ime" />
-        <input type="text" v-model="organizatorPrezime" placeholder="prezime" /><br>
+        <select v-model="organizatorId">
+            <option disabled value="">Organizator: </option>
+            <option v-for="organizator in organizers" :key="organizator.id" :value="organizator.id">
+                {{ organizator.ime }}
+            </option>
+        </select><br>
         <label>Kratki opis: </label>
         <textarea v-model="opis" placeholder="kratki opis" rows="5"></textarea><br>
         <label>Datum: </label>
@@ -50,6 +60,8 @@
 
 <script>
 import { concertApi } from '../api/concertApi.js'
+import { artistApi } from '../api/artistApi.js'
+import { organizerApi } from '../api/organizerApi.js'
 
 export default {
   data() {
@@ -71,6 +83,10 @@ export default {
       grad: '',
       adresa: '',
       datumGreska: '',
+      artists: [],
+      organizers: [],
+      izvodacId: '',
+      organizatorId: '',
     };
   },
   computed: {
@@ -88,6 +104,12 @@ export default {
     },
   },
   methods: {
+    async ucitajIzvodace() {
+      this.artists = await artistApi.getAll();
+    },
+    async ucitajOrganizatore() {
+      this.organizers = await organizerApi.getAll();
+    },
     async ucitajKoncert() {
       try {
         const data = await concertApi.getById(this.$route.params.id);
@@ -105,7 +127,8 @@ export default {
     },
     ukljuciUredivanje() {
       this.naziv = this.koncert.naziv;
-      this.izvodac = this.koncert.izvodac;
+      this.izvodacId = this.koncert.artistId;
+      this.organizatorId = this.koncert.organizerId;
       this.organizatorIme = this.koncert.organizatorIme;
       this.organizatorPrezime = this.koncert.organizatorPrezime;
       this.opis = this.koncert.opis;
@@ -128,37 +151,20 @@ export default {
         return;
       }
       try {
-        await fetch(`/api/concerts/${this.koncert.id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+        await concertApi.update(this.koncert.id, {
             name: this.naziv,
-            dateTime: `${this.datum}T${this.vrijeme}:00`,
+            dateTime: `${this.datum}T${this.vrijeme}`,
             description: this.opis,
-            artistName: this.izvodac,
+            artistId: this.izvodacId,
+            organizerId: this.organizatorId,
             country: this.drzava,
             city: this.grad,
+            postalCode: this.koncert.postalCode,
             address: this.adresa,
-            organizerFirstName: this.organizatorIme,
-            organizerLastName: this.organizatorPrezime,
-          }),
         });
-        if (!response.ok) throw new Error(`API error: ${response.status}`);
-        this.koncert.naziv = this.naziv;
-        this.koncert.izvodac = this.izvodac;
-        this.koncert.organizatorIme = this.organizatorIme;
-        this.koncert.organizatorPrezime = this.organizatorPrezime;
-        this.koncert.opis = this.opis;
-        this.koncert.datum = `${this.datum}T${this.vrijeme}:00`;
-        this.koncert.drzava = this.drzava;
-        this.koncert.grad = this.grad;
-        this.koncert.adresa = this.adresa;
-        this.formatirajDatum(this.koncert.datum);
-
         this.success = 'Koncert uspješno ažuriran!';
         this.uredivanje = false;
+        await this.ucitajKoncert();
       } catch (error) {
         console.error(error);
         this.error = 'Neuspjeh slanja podataka';
@@ -167,6 +173,8 @@ export default {
   },
   async created() {
     await this.ucitajKoncert();
+    await this.ucitajIzvodace();
+    await this.ucitajOrganizatore();
   },
 };
 </script>
